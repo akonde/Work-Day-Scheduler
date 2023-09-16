@@ -12,11 +12,11 @@ function displayPlanner() {
     currentDayElement.textContent = currentDay;
 
     // Standard business hours
-    const businessHours = ['9 AM', '10 AM', '11 AM', '12 PM', '1 PM', '2 PM', '3 PM', '4 PM', '5 PM'];
+    const businessHours = ['9AM ', '10AM', '11AM', '12PM', '1PM ', '2PM  ', '3PM ', '4PM', '5PM'];
 
     businessHours.forEach(hour => {
-        const timeBlock = document.createElement('div');
-        timeBlock.classList.add('timeBlock');
+        const timeBlock = document.createElement('p');
+        timeBlock.classList.add('time-block');
         timeBlock.textContent = hour;
 
         // Add color-coding based on past, present, and future using Day.js
