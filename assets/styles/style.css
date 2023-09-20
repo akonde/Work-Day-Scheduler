@@ -11,6 +11,7 @@ textarea {
   color: #000000;
   border-left: 1px solid black;
   padding: 10px;
+  /* display: block; */
 }
 
 header {
@@ -24,6 +25,7 @@ header {
 
 .description {
   white-space: pre-wrap;
+  background-color: #dd3232;
 }
 
 .time-block {

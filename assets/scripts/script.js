@@ -1,54 +1,42 @@
 // Display the current day at the top of the calendar
-// const currentDayElement = document.getElementById('currentDay');
-// currentDayElement.textContent = dayjs().format('dddd, MMMM D, YYYY');
 
+$(document).ready(function () {
+     $("#currentDay").text(dayjs().format('dddd MMMM D YYYY'));
 
-// Function to display current day and time blocks
-function displayPlanner() {
-    const currentDayElement = document.getElementById('currentDay');
-    const timeBlocksElement = document.getElementById('timeBlocks');
-    const now = dayjs(); // Get the current date and time using Day.js
-    const currentDay = now.format('dddd, MMMM D, YYYY'); // Format the date
-    currentDayElement.textContent = currentDay;
+  // Color-code each timeblock based on past, present, and future when the timeblock is viewed.
+  function updateTimeblockColors() {
+    let currentHour = dayjs().hour();
 
-    // Standard business hours
-    const businessHours = ['9AM ', '10AM', '11AM', '12PM', '1PM ', '2PM  ', '3PM ', '4PM', '5PM'];
+    $(".time-block").each(function () {
+      let blockHour = parseInt($(this).attr("id"));
 
-    businessHours.forEach(hour => {
-        const timeBlock = document.createElement('p');
-        timeBlock.classList.add('time-block');
-        timeBlock.textContent = hour;
-
-        // Add color-coding based on past, present, and future using Day.js
-        const timeBlockTime = dayjs(hour, 'h A'); // Parse the time using Day.js
-        if (timeBlockTime.isBefore(now, 'hour')) {
-            timeBlock.classList.add('past');
-        } else if (timeBlockTime.isSame(now, 'hour')) {
-            timeBlock.classList.add('present');
-        } else {
-            timeBlock.classList.add('future');
-        }
-
-        timeBlocksElement.appendChild(timeBlock);
-
-        // Add click event to allow users to enter an event
-        timeBlock.addEventListener('click', () => {
-            const eventText = prompt(`Enter an event for ${hour}:`);
-            if (eventText !== null) {
-                // Save the event in local storage
-                localStorage.setItem(hour, eventText);
-                // Display the event in the time block
-                timeBlock.textContent = `${hour}: ${eventText}`;
-            }
-        });
-
-        // Retrieve and display saved events from local storage
-        const savedEvent = localStorage.getItem(hour);
-        if (savedEvent) {
-            timeBlock.textContent = `${hour}: ${savedEvent}`;
-        }
+      if (blockHour < currentHour) {
+        $(this).addClass("past");
+      } else if (blockHour === currentHour) {
+        $(this).addClass("present");
+      } else {
+        $(this).addClass("future");
+      }
     });
-}
+  }
 
-// Call the function to display the planner
-displayPlanner();
+  // Allow a user to enter an event when they click a timeblock
+  $(".saveBtn").on("click", function () {
+    let hour = $(this).closest(".time-block").attr("id");
+    let event = $(this).siblings(".plan").val();
+    localStorage.setItem(hour, event);
+  });
+
+  // Save the event in local storage when the save button is clicked in that timeblock.
+  function loadEvents() {
+    $(".time-block").each(function () {
+      let hour = $(this).attr("id");
+      let event = localStorage.getItem(hour);
+      $(this).find(".plan").val(event);
+    });
+  }
+
+
+  updateTimeblockColors();
+  loadEvents();
+});
